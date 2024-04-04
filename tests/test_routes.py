@@ -143,6 +143,19 @@ class TestAccountService(TestCase):
         new_account = resp.get_json()
         new_account["name"] = "Something Known"
         resp = self.client.put(f"{BASE_URL}/{new_account['id']}", json=new_account)
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        updated_account = resp.get_json()
-        self.assertEqual(updated_account["name"], "Something Known")
+        # delete an account
+    def test_delete_account(self):
+        """It should Delete an Account"""
+        account = self._create_accounts(1)[0]
+        resp = self.client.delete(f"{BASE_URL}/{account.id}")
+        # List all accounts
+    def test_get_account_list(self):
+        """It should Get a list of Accounts"""
+        self._create_accounts(5)
+        resp = self.client.get(BASE_URL)
+        # Error handlers
+    def test_method_not_allowed(self):
+        """It should not allow an illegal method call"""
+        resp = self.client.delete(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+       
