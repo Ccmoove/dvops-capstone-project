@@ -8,6 +8,7 @@ from flask import jsonify, request, make_response, abort, url_for   # noqa; F401
 from service.models import Account
 from service.common import status  # HTTP Status Codes
 from . import app  # Import Flask application
+from whitespace_correction import WhitespaceCorrector
 
 
 ############################################################
@@ -89,8 +90,8 @@ def get_accounts(account_id):
     
     if not account:
         abort(f"Account with id [{account_id}] could not be found.", status.HTTP_404_NOT_FOUND,)
-    return account.serialize(), status.HTTP_200_OK
-            
+
+    return account.serialize(), status.HTTP_200_OK           
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
 ######################################################################
@@ -105,12 +106,11 @@ def update_accounts(account_id):
     account = Account.find(account_id)
     account.deserialize(request.get_json())
     account.update()
-        
+    
     if not account:
         abort(f"Account with id [{account_id}] could not be found.", status.HTTP_404_NOT_FOUND)
         
     return account.serialize(), status.HTTP_200_OK
-
 ######################################################################
 # DELETE AN ACCOUNT
 ######################################################################
