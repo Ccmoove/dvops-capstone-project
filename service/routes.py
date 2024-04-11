@@ -92,6 +92,8 @@ def get_accounts(account_id):
         abort(f"Account with id [{account_id}] could not be found.", status.HTTP_404_NOT_FOUND,)
 
     return account.serialize(), status.HTTP_200_OK           
+
+    return account.serialize(), status.HTTP_200_OK       
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
 ######################################################################
@@ -102,6 +104,15 @@ def update_accounts(account_id):
     This endpoint will update an Account based on the posted data
     """
     app.logger.info("Request to update an Account with id: %s", account_id)
+    
+    account = Account.find(account_id)
+    account.deserialize(request.get_json())
+    account.update()
+        
+    if not account:
+        abort(f"Account with id [{account_id}] could not be found.", status.HTTP_404_NOT_FOUND)
+        
+    return account.serialize(), status.HTTP_200_OK
 
     account = Account.find(account_id)
     account.deserialize(request.get_json())
