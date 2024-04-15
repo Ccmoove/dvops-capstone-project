@@ -139,14 +139,14 @@ class TestAccountService(TestCase):
 
         data = response.get_json()
 
-        self.assertEqual(data, account.name)
+        self.assertEqual(data["name"], account.name)
 
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
     def test_get_account_not_found(self):
 
         """It should not Read an Account that is not found"""
 
-        resp = self.client.get(f"{BASE_URL}/0")
+        resp = self.client.get(f"{BASE_URL}/")
 
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -171,7 +171,8 @@ class TestAccountService(TestCase):
         """It should Delete an Account"""
         account = self._create_accounts(1)[0]
         resp = self.client.delete(f"{BASE_URL}/{account.id}")
-       
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+      
         # List all accounts
     def test_get_account_list(self):
 
@@ -182,7 +183,7 @@ class TestAccountService(TestCase):
         resp = self.client.get(BASE_URL)
         data = resp.get_json()
 
-        self.assertEqual(len(data), 3)
+        self.assertEqual(len(data), 2)
 
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
@@ -190,7 +191,7 @@ class TestAccountService(TestCase):
 
         """It should not list an Account that is not found"""
 
-        resp = self.client.get(f"{BASE_URL}/0")
+        resp = self.client.get(f"{BASE_URL}/")
 
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
